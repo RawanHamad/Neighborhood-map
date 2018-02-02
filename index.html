@@ -5,26 +5,42 @@
     <meta charset="UTF-8">
     <title>Neiborhood Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-    #map {
-        height: 100%;
-    }
-
-    html,
-    body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    </style>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <div id="map"></div>
-    <script src="js/lib/jquery-3.2.1.min.js"></script>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="side-nav col-md-4" data-bind="css: {'sidebar_shown': isOpen}">
+                <div class="row">
+                    <!-- Filter input div -->
+                    <div class="filter-div col-md-12">
+                        <input data-bind="textInput: filteredText" type="text" class="form-control" placeholder="Search stores ..">
+                        <!-- Filtered list div -->
+                        <div class="filtered-list" data-bind="foreach: applyFilter">
+                            <a class="nav" href="#" data-bind="text: name, click: $parent.showWindowInfo"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 main-container " data-bind="css: {'sidebar_shown': isOpen}">
+                <div class="row">
+                    <!-- Hamburger menu div -->
+                    <div class="col-md-12">
+                        <a data-bind="click: toggle" class="clk hamburgerMenu" >☰</a>
+                    </div>
+                    <!-- Map div -->
+                    <div class="map-div col-md-12" id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/lib/knockout-3.4.2.js"></script>
+    <script src="js/lib/jquery-3.2.1.min.js"></script>
     <script src="js/app.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4So1paXzqI7Rx-EwKRtm9X7fhi8JfCXE&callback=initMap" async defer onerror="onMapError()"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4So1paXzqI7Rx-EwKRtm9X7fhi8JfCXE&callback=init" async defer onerror="onMapError()"></script>
 </body>
 
 </html>

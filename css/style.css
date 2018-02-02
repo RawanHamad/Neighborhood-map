@@ -1,0 +1,77 @@
+/*Media Queries*/
+
+@media screen and (max-width: 670px) {
+    .side-nav {
+        padding: 0;
+        width: 0;
+    }
+}
+
+@media screen and (min-width: 671px) {
+    .hamburgerMenu {
+        display: none;
+    }
+}
+
+
+
+
+/*Main CSS*/
+
+body,
+html,
+.map-div,
+.container-fluid,
+.row,
+.main-container {
+    min-height: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: black;
+    color: white;
+}
+
+.hamburgerMenu {
+    font-size: 20px;
+}
+
+.nav {
+    padding: 10px;
+    color: white;
+}
+
+.nav:hover {
+    color: black;
+    background-color: #DCDCDC;
+}
+
+.main-container {
+    transition: 0.5s;
+}
+
+.side-nav {
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.sidebar_shown {
+    width: 50%;
+}
+
+.filter-div {
+    margin: 10px;
+}
+
+.filtered-list {
+    margin-top: 20px;
+}
+
+.locationName {
+    color: black;
+}
+
+.error_message {
+    color: red;
+}
