@@ -58,7 +58,7 @@ function addMarkers() {
                 bounceMarker(clickedLocation.marker);
                 infoWindow.open(map, clickedLocation.marker);
                 infoWindow.setContent(clickedLocation.infoWindowContent);
-            }
+            };
         }(clickedLocation));
 
     });
