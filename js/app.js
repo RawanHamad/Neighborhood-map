@@ -1,12 +1,12 @@
 // Foursquare API
-const CLIENT_ID = "2RGJRRNCCC0J01BA4ADEYBECTWOHMCXYPJIFF5FKMQXAWESB";
-const CLIENT_SECRET = "MDTCNLZ3Q1TYTY0SBV3Z5WC1MSP05U3V2TX3MF0HIESBFNHS";
+const CLIENT_ID = "IMUXRIGOZWBH3MCVLQGDGSR2UHJES03PCD3GAXLE0N11QXJJ";
+const CLIENT_SECRET = "2SYS1L5O1GZY0JSMRWSOT0W3JLXN53H2LSTU2ENIG3STLB4N";
 const LOCATION_CENTER = {
     lat: 24.7136,
     lng: 46.6753
 };
 const SEARCH_QUERY = "Cookie";
-const SEARCH_LIMIT = "10";
+const SEARCH_LIMIT = "5";
 
 const FOURSQUARE_API = "https://api.foursquare.com/v2/venues/search?ll=" + LOCATION_CENTER.lat + "," + LOCATION_CENTER.lng +
     "&query=" + SEARCH_QUERY + "&limit=" + SEARCH_LIMIT + "&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20170304";
@@ -104,10 +104,14 @@ function updateMarker() {
  * */
 
 function displayInfoWindow(location) {
+    console.log(location)
     //check if there is a value for each phone and website to display it, and if not display not found.
-    let website = location.url !== undefined ? '<a href="' + location.url + '">' + location.url + '</a>' : '<p class="error_message">Website not found.<p/>';
-    let phoneNumber = location.phone !== undefined ? '<a href="tel:' + location.phone + '">' + location.phone + '</a></br>' : '<p class="error_message"> Phone number not found.<p />';
-    return '<div id="content">' + '<h4 class="locationName">' + location.name + '</h4>' + phoneNumber + website + '</div>';
+    let website = location.shortUrl !== undefined ? '<a href="' + location.shortUrl + '">' + location.shortUrl + '</a></br>' : '';
+    let phoneNumber = location.phone !== undefined ? '<a href="tel:' + location.phone + '">' + location.phone + '</a></br>' : '';
+    // let phoneNumber = location.phone !== undefined ? '<a href="tel:' + location.phone + '">' + location.phone + '</a></br>' : '<p class="error_message"> Phone number not found.<p />';
+
+    return '<div id="content">' + '<h4 class="locationName">' + location.name + '</h4>' + website + phoneNumber  + '</div>';
+
 }
 
 
@@ -116,10 +120,10 @@ function displayInfoWindow(location) {
  * */
 var StoreModel = function(store) {
     var self = this;
-
+    this.id = store.id;
     this.name = store.name;
     this.phone = store.phone;
-    this.url = store.url;
+    this.shortUrl = store.shortUrl;
     this.lat = store.lat;
     this.lng = store.lng;
     this.infoWindowContent = store.infoWindowContent;
@@ -159,27 +163,9 @@ var AppViewModel = function() {
         $.getJSON(req_url, function(store) {
             var venues = store.response.venues;
             venues.forEach(function(venue) {
-                var marker = new google.maps.Marker({
-                    map: null,
-                    animation: google.maps.Animation.DROP,
-                    position: { lat: venue.location.lat, lng: venue.location.lng },
-                    title: venue.name
-                });
-                var Venue = new StoreModel({
-                    'name': venue.name,
-                    'lat': venue.location.lat,
-                    'lng': venue.location.lng,
-                    'phone': venue.contact.phone,
-                    'url': venue.url,
-                    'marker': marker
-                });
-                Venue.infoWindowContent = displayInfoWindow(Venue);
-
-                self.stores.push(Venue);
+                self.loadDetail(venue.id);
             });
 
-            // display markers once retrieved
-            addMarkers();
         }).fail(function(jqXHR, textStatus, errorThrown) {
             alert('GetJSON request failed! ' + errorThrown);
         });
@@ -193,6 +179,43 @@ var AppViewModel = function() {
         });
     };
 
+
+    this.loadDetail = function(location) {
+        $.getJSON("https://api.foursquare.com/v2/venues/" + location + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20170304", function(store) {
+
+                console.log(store.response.venue);
+                var venue = store.response.venue;
+
+                var marker = new google.maps.Marker({
+                    map: null,
+                    animation: google.maps.Animation.DROP,
+                    position: { lat: venue.location.lat, lng: venue.location.lng },
+                    title: venue.name
+                });
+
+
+                var Venue = new StoreModel({
+                    'id': venue.id,
+                    'name': venue.name,
+                    'shortUrl': venue.shortUrl,
+                    'lat': venue.location.lat,
+                    'lng': venue.location.lng,
+                    'phone': venue.contact.phone,
+                    'marker': marker
+                });
+
+                Venue.infoWindowContent = displayInfoWindow(Venue);
+                self.stores.push(Venue);
+                addMarkers();
+
+
+
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.log('GetJSON request failed! ' + errorThrown);
+            });
+
+    };
 
     //https://stackoverflow.com/questions/47741328/filtering-list-with-knockout
     this.applyFilter = ko.computed(function() {
