@@ -104,7 +104,6 @@ function updateMarker() {
  * */
 
 function displayInfoWindow(location) {
-    console.log(location)
     //check if there is a value for each phone and website to display it, and if not display not found.
     let website = location.shortUrl !== undefined ? '<a href="' + location.shortUrl + '">' + location.shortUrl + '</a></br>' : '';
     let phoneNumber = location.phone !== undefined ? '<a href="tel:' + location.phone + '">' + location.phone + '</a></br>' : '';
