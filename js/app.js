@@ -105,9 +105,8 @@ function updateMarker() {
 
 function displayInfoWindow(location) {
     //check if there is a value for each phone and website to display it, and if not display not found.
-    let website = location.shortUrl !== undefined ? '<a href="' + location.shortUrl + '">' + location.shortUrl + '</a></br>' : '';
-    let phoneNumber = location.phone !== undefined ? '<a href="tel:' + location.phone + '">' + location.phone + '</a></br>' : '';
-    // let phoneNumber = location.phone !== undefined ? '<a href="tel:' + location.phone + '">' + location.phone + '</a></br>' : '<p class="error_message"> Phone number not found.<p />';
+    let website = location.shortUrl !== undefined ? '<a href="' + location.shortUrl + '">' + location.shortUrl + '</a></br>' : '<p class="error_message"> URL not found.<p />';
+    let phoneNumber = location.phone !== undefined ? '<a href="tel:' + location.phone + '">' + location.phone + '</a></br>' : '<p class="error_message"> Phone number not found.<p />';
 
     return '<div id="content">' + '<h4 class="locationName">' + location.name + '</h4>' + website + phoneNumber  + '</div>';
 
@@ -211,7 +210,7 @@ var AppViewModel = function() {
 
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
-                console.log('GetJSON request failed! ' + errorThrown);
+                alert('GetJSON request failed! ' + errorThrown);
             });
 
     };
